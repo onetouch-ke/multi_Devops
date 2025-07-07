@@ -8,12 +8,6 @@ backend:
   tag: 37
   port: 8080
 
-mariadb:
-  image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/monolith-mariadb
-  tag: 37
-  port: 3306
-  rootPassword: P@ssw0rd
-
 ingress:
   enabled: true
   host: ""  #ALB가 생성하는 DNS 주소
