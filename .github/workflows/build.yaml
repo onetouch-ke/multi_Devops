@@ -1,0 +1,100 @@
+name: Auto Build and Update Image Tag
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: true
+        fetch-depth: 0
+
+    - name: Set up Git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Set build tag
+      run: echo "TAG=${{ github.run_number }}" >> $GITHUB_ENV
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-2
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v44
+
+    # 백엔드 변경 시 빌드 및 푸시
+    - name: Build and Push backend if changed
+      if: contains(steps.changed-files.outputs.all_changed_files, 'backend/')
+      run: |
+        IMAGE=${{ steps.login-ecr.outputs.registry }}/monolith-backend:${{ env.TAG }}
+        docker build -t $IMAGE -f backend/Dockerfile backend
+        docker push $IMAGE
+        echo "BACKEND_IMAGE=$IMAGE" >> $GITHUB_ENV
+
+    # 프론트엔드 변경 시 빌드 및 푸시
+    - name: Build and Push frontend if changed
+      if: contains(steps.changed-files.outputs.all_changed_files, 'frontend/')
+      run: |
+        IMAGE=${{ steps.login-ecr.outputs.registry }}/monolith-frontend:${{ env.TAG }}
+        docker build -t $IMAGE -f frontend/Dockerfile frontend
+        docker push $IMAGE
+        echo "FRONTEND_IMAGE=$IMAGE" >> $GITHUB_ENV
+
+    # 마리아DB 변경 시 빌드 및 푸시
+    - name: Build and Push mariadb if changed
+      if: contains(steps.changed-files.outputs.all_changed_files, 'DB/')
+      run: |
+        IMAGE=${{ steps.login-ecr.outputs.registry }}/monolith-mariadb:${{ env.TAG }}
+        docker build -t $IMAGE -f DB/Dockerfile DB
+        docker push $IMAGE
+        echo "MARIADB_IMAGE=$IMAGE" >> $GITHUB_ENV
+
+    - name: Update Helm templates if any image built
+      run: |
+        echo "📦 Updating Helm templates with new image tags"
+        [[ -n "$BACKEND_IMAGE" ]] && sed -i "s|image:.*monolith-backend.*|image: $BACKEND_IMAGE|" mychart/templates/backend-deployment.yaml
+        [[ -n "$FRONTEND_IMAGE" ]] && sed -i "s|image:.*monolith-frontend.*|image: $FRONTEND_IMAGE|" mychart/templates/frontend-deployment.yaml
+        [[ -n "$MARIADB_IMAGE" ]] && sed -i "s|image:.*monolith-mariadb.*|image: $MARIADB_IMAGE|" mychart/templates/mariadb-deployment.yaml
+
+        git add mychart/templates/*.yaml
+        git commit -m "Auto update image tags to ${{ env.TAG }}" || echo "No changes to commit"
+
+    - name: Push to CI/CD
+      run: |
+        BRANCH_NAME=CI/CD
+        git checkout -B $BRANCH_NAME
+        git push origin $BRANCH_NAME --force
+
+    - name: Create or update pull request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: CI/CD
+        title: Auto update image tags to ${{ env.TAG }}
+        body: |
+          This PR was automatically created by GitHub Actions.
+          It updates image tags to `${{ env.TAG }}`.
+        base: main
+        delete-branch: false

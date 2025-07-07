@@ -1,0 +1,19 @@
+clusterName: tg-Cluster #실제 클러스터 이름
+region: ap-northeast-2
+vpcId: vpc-0b21a1bf162b78b7a  # 실제 VPC ID로 변경하세요
+
+albController:
+  image: lsh5224/aws-lb-controller:v2.7.1
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: false
+  name: aws-load-balancer-controller
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::038964340463:role/eksctl-tg-Cluster-addon-iamserviceaccount-kub-Role1-Mss91EYEm1DT"
+
+webhook:
+  certSecretName: aws-load-balancer-webhook-tls
+

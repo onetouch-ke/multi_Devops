@@ -1,0 +1,9 @@
+frontend:
+  port: 80
+
+backend:
+  port: 8080
+
+ingress:
+  enabled: true
+  host: ""  #ALB가 생성하는 DNS 주소
