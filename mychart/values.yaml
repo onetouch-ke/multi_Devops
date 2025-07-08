@@ -4,10 +4,16 @@ frontend:
   port: 80
 
 backend:
-  image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-backend
-  tag: 37
-  port: 8080
+  boards:
+    image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-backend-boards
+    tag: 39
+    port: 8080
+
+  users:
+    image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-backend-users
+    tag: 39
+    port: 8081
 
 ingress:
   enabled: true
-  host: ""  #ALB가 생성하는 DNS 주소
+  host: ""  # ALB가 생성한 DNS 주소
