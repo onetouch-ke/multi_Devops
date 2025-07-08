@@ -6,12 +6,12 @@ frontend:
 backend:
   boards:
     image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-backend-boards
-    tag: 3
+    tag: 4
     port: 8080
 
   users:
     image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-backend-users
-    tag: 3
+    tag: 4
     port: 8080
 
 ingress:
