@@ -1,0 +1,21 @@
+# alertmanager-config.yaml
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: discord-alert
+  namespace: monitoring
+  labels:
+    app: discord-alert
+spec:
+  route:
+    receiver: discord
+    groupBy: ['alertname']
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 1h
+  receivers:
+  - name: discord
+    webhookConfigs:
+    - url: http://alertmanager-discord.monitoring.svc.cluster.local:9094/alerts
+      sendResolved: true
+

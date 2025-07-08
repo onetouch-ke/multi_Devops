@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: test-discord-alert
+  namespace: monitoring
+spec:
+  groups:
+    - name: discord-test
+      rules:
+        - alert: DiscordTestAlert
+          expr: vector(1)
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "💥 Discord Test Alert!"
+
