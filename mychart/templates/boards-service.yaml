@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mariadb
+  name: boards
 spec:
   selector:
-    app: mariadb
+    app: boards
   ports:
     - protocol: TCP
-      port: 3306
-      targetPort: {{ .Values.mariadb.port }}
+      port: 8080
+      targetPort: {{ .Values.backend.boards.port }}
   type: ClusterIP

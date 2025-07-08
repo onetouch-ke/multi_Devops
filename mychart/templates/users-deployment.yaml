@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: users
 spec:
   replicas: 1
   strategy:
@@ -11,18 +11,18 @@ spec:
       maxSurge: 1
   selector:
     matchLabels:
-      app: backend
+      app: users
   template:
     metadata:
       labels:
-        app: backend
+        app: users
     spec:
       containers:
-      - name: backend
-        image: "{{ .Values.backend.image }}:{{ .Values.backend.tag }}"
+      - name: users
+        image: "{{ .Values.backend.users.image }}:{{ .Values.backend.users.tag }}"
         imagePullPolicy: Always
         ports:
-        - containerPort: {{ .Values.backend.port }}
+        - containerPort: {{ .Values.backend.users.port }}
         env:
         - name: SPRING_DATASOURCE_URL
           value: jdbc:mariadb://mariadb:3306/mydb
