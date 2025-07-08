@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/onetouch-ke/multi-Devops.git
+    repoURL: https://github.com/onetouch-ke/multi_Devops.git
     targetRevision: HEAD
     path: mychart
     helm:
