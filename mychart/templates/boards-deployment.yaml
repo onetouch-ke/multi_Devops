@@ -25,9 +25,9 @@ spec:
         - containerPort: {{ .Values.backend.boards.port }}
         env:
         - name: SPRING_DATASOURCE_URL
-          value: jdbc:mariadb://mariadb:3306/mydb
+          value: jdbc:mariadb://6fb21019-440b-4ad8-b69e-d9adc45c2c9b.internal.kr1.mariadb.rds.nhncloudservice.com/boards
         - name: SPRING_DATASOURCE_USERNAME
-          value: root
+          value: "{{ .Values.mariadb.userName }}"
         - name: SPRING_DATASOURCE_PASSWORD
           value: "{{ .Values.mariadb.rootPassword }}"
       imagePullSecrets:
