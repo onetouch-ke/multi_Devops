@@ -1,10 +1,9 @@
 frontend:
-  image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/monolith-frontend
+  image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-frontend
   tag: 38
   port: 80
 
 backend:
-<<<<<<< HEAD
   boards:
     image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-backend-boards
     tag: 39
@@ -13,18 +12,7 @@ backend:
   users:
     image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-backend-users
     tag: 39
-    port: 8081
-=======
-  image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/monolith-backend
-  tag: 37
-  port: 8080
->>>>>>> 24a02710a034bc7c3fb1e3e0a1717bb26491a8b1
-
-mariadb:
-  image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/monolith-mariadb
-  tag: 37
-  port: 3306
-  rootPassword: P@ssw0rd
+    port: 8080
 
 ingress:
   enabled: true
