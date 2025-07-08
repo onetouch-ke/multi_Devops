@@ -13,13 +13,22 @@ spec:
   rules:
     - http:
         paths:
-          - path: /api/
+          - path: /api/boards/
             pathType: Prefix
             backend:
               service:
-                name: backend
+                name: boards
                 port:
-                  number: {{ .Values.backend.port }}
+                  number: {{ .Values.boards.port }}
+
+          - path: /api/users/
+            pathType: Prefix
+            backend:
+              service:
+                name: users
+                port:
+                  number: {{ .Values.users.port }}
+
           - path: /
             pathType: Prefix
             backend:
@@ -28,5 +37,4 @@ spec:
                 port:
                   number: {{ .Values.frontend.port }}
 {{- end }}
-
 

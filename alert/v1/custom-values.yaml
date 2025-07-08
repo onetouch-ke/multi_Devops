@@ -1,0 +1,6 @@
+# custom-values.yaml
+alertmanager:
+  alertmanagerConfigSelector:
+    matchLabels:
+      app: discord-alert
+

@@ -1,0 +1,10 @@
+[
+  {
+    "status": "firing",
+    "labels": { "alertname":"DirectTest","instance":"local" },
+    "annotations": { "summary":"어댑터 직접 테스트" },
+    "startsAt":"2025-07-08T11:00:00Z",
+    "endsAt":"0001-01-01T00:00:00Z",
+    "generatorURL":"http://..."
+  }
+]

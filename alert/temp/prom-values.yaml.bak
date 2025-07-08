@@ -1,0 +1,32 @@
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    #configSecret: alertmanager-config
+    configSecret: ""
+    configMap: alertmanager-config         # 기존 configMap 사용 안함 (명시적으로 비움)
+    config: {}            # Helm 기본 config도 제거
+    externalUrl: http://localhost:9093
+    routePrefix: /
+
+grafana:
+  enabled: true
+  adminPassword: admin
+  ingress:
+    enabled: true
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+    path: /
+    hosts:
+      - grafana.example.com
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+
+server:
+  persistentVolume:
+    enabled: true
+    storageClass: gp2
+    size: 8Gi
+

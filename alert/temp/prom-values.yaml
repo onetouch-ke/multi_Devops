@@ -1,0 +1,51 @@
+# prom-values.yaml
+alertmanager:
+  enabled: true
+
+  alertmanagerSpec:
+    # 외부 Secret 사용
+    useExistingSecret: true
+    configSecret: "alertmanager-config"
+    # inline 설정은 비워둡니다
+    configInline: ""
+
+  ingress:
+    enabled: false
+
+  externalUrl: "http://localhost:9093"
+  routePrefix: "/"
+
+prometheus:
+  enabled: true
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+
+    alerting:
+      alertmanagers:
+        - name: alertmanager-main
+          namespace: monitoring
+          port: 9093
+          staticConfigs:
+            - targets: ['localhost:9093']
+
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp2
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 8Gi
+
+grafana:
+  enabled: true
+  adminPassword: "admin"
+  ingress:
+    enabled: true
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+    hosts:
+      - grafana.example.com
+
