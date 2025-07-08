@@ -1,17 +1,17 @@
 frontend:
   image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-frontend
-  tag: 38
+  tag: 1
   port: 80
 
 backend:
   boards:
     image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-backend-boards
-    tag: 39
+    tag: 3
     port: 8080
 
   users:
     image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-backend-users
-    tag: 39
+    tag: 3
     port: 8080
 
 ingress:
