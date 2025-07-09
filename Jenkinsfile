@@ -2,15 +2,15 @@ pipeline {
   agent any
 
   environment {
-    GIT_CREDENTIALS_ID = 'jenkins' // Jenkins Credentials ID
-    VALUES_FILE = 'myChart/values.yaml'
+    GIT_CREDENTIALS_ID = 'jenkins'         // Jenkins에 등록한 GitHub 자격증명 ID
+    VALUES_FILE = 'mychart/values.yaml'    // Helm 차트 경로
   }
 
   triggers {
     GenericTrigger(
       genericVariables: [
-        [key: 'REPO', value: '$.repository.name'],
-        [key: 'NEW_TAG', value: '$.head_commit.id']
+        [key: 'REPO', value: '$.repository.name'],       // 예: multi-frontend
+        [key: 'NEW_TAG', value: '$.head_commit.id']      // 예: 커밋 SHA
       ],
       token: 'msa-token'
     )
@@ -30,11 +30,18 @@ pipeline {
       }
     }
 
-    stage('Determine service path') {
+    stage('Determine yq path') {
       steps {
         script {
-          env.SERVICE_KEY = REPO.replace('multi_', '') // 예: multi-frontend → frontend
-          env.YQ_PATH = ".services.${SERVICE_KEY}.image.tag"
+          if (REPO == 'multi-frontend') {
+            env.YQ_PATH = '.frontend.tag'
+          } else if (REPO == 'multi-backend-boards') {
+            env.YQ_PATH = '.backend.boards.tag'
+          } else if (REPO == 'multi-backend-users') {
+            env.YQ_PATH = '.backend.users.tag'
+          } else {
+            error "❌ 알 수 없는 REPO 이름: ${REPO}"
+          }
         }
       }
     }
@@ -59,7 +66,7 @@ pipeline {
           git config user.name "jenkins-bot"
           git config user.email "jenkins@local"
           git add ${VALUES_FILE}
-          git commit -m "chore: update \${SERVICE_KEY} tag to ${NEW_TAG}" || echo "No changes to commit"
+          git commit -m "chore: update ${REPO} tag to ${NEW_TAG}" || echo 'No changes to commit'
           git push origin main
         """
       }
