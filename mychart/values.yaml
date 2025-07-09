@@ -1,17 +1,17 @@
 frontend:
   image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-frontend
-  tag: 1
+  tag: 2
   port: 80
 
 backend:
   boards:
     image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-backend-boards
-    tag: 5
+    tag: 6
     port: 8080
 
   users:
     image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi-backend-users
-    tag: 5
+    tag: 6
     port: 8080
 
 mariadb:
