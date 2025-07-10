@@ -3,3 +3,8 @@ backend:
     image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi_backend_boards
     tag: 2
     port: 8080
+
+mariadb:
+  port: 3306
+  userName: MSA_User
+  rootPassword: P@ssw0rd
