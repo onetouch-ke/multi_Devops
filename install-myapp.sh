@@ -1,5 +1,7 @@
 helm install alb-controller alb-controller
-helm install msa mychart
+helm install msa_front mychart/frontend
+helm install msa_boards mychart/boards
+helm install msa_users mychart/users
 kubectl create namespace argocd
 helm repo add argo https://argoproj.github.io/argo-helm
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
