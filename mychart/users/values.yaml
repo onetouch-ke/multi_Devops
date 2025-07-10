@@ -1,0 +1,5 @@
+backend:
+  users:
+    image: 013958955750.dkr.ecr.ap-northeast-2.amazonaws.com/multi_backend_users
+    tag: 3
+    port: 8080
